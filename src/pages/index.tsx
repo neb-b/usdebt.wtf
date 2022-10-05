@@ -34,6 +34,7 @@ type DataProps = {
 
 type Props = ErrorProps | DataProps
 
+// @ts-ignore
 const Home: React.FC<Props> = ({ error: serverSideError, usd, btc }) => {
   return (
     <Box>
