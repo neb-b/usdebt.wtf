@@ -14,12 +14,13 @@ function App({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>usdebt.wtf</title>
+        <meta name="og:title" content="usdebt.wtf" />
         <meta name="og:image" content="https://usdebt.wtf/31.png" />
         <link rel="icon" type="image/x-icon" href="https://usdebt.wtf/favicon.png"></link>
         <meta property="og:description" content="wtf is going on with the us debt?" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://usdebt.wtf/og.png" />
+        <meta name="twitter:image" content="https://usdebt.wtf/31.png" />
         <meta name="twitter:title" content="usdebt.wtf" />
       </Head>
       <ChakraProvider theme={theme}>
