@@ -49,10 +49,11 @@ const Home: React.FC<Props> = ({ error: serverSideError, usd, btc }) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   if (process.env.NODE_ENV === "production") {
     try {
-      await db.from("access").insert({ a: 1 })
+      const { referrer } = context.req.headers
+      await db.from("access").insert({ a: 1, referrer })
     } catch (e) {}
   }
 
