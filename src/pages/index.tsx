@@ -53,7 +53,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (process.env.NODE_ENV === "production") {
     try {
       const { referer = "" } = context.req.headers
-      await db.from("access").insert({ created_at: Date.now(), referer })
+      const { error } = await db
+        .from("access")
+        .insert({ created_at: new Date().toISOString().toLocaleString(), referer })
+
+      if (error) {
+        throw error
+      }
     } catch (e) {}
   }
 
