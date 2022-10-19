@@ -25,6 +25,7 @@ type Props = {
     initialAmount: number
     changePerMs: number
     debtPerPerson: number
+    currentGDP: number
   }
   btc?: {
     price: number
@@ -33,9 +34,9 @@ type Props = {
   }
 }
 
-const Home: React.FC<Props> = ({ error: serverSideError, usd, btc, visitors }) => {
+const Home: React.FC<Props> = ({ error: serverSideError, usd, btc }) => {
   return (
-    <Layout visitors={visitors}>
+    <Layout>
       <Box>
         {serverSideError && (
           <Text color="red.500" bg="red.200" fontWeight={600} p={4} m={4} borderRadius={10}>
@@ -73,21 +74,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     if (error) throw error
 
-    const { data: accessData, error: accessError } = await db
-      .from<{ id: number }>("access")
-      .select("id")
-      .order("id", { ascending: false })
-      .limit(1)
-
-    if (accessError) throw accessError
-
     const price = await getBtcPrice()
     const { usd, btc } = getData(data, price)
-    const { id: accessId } = accessData[0]
 
     return {
       props: {
-        visitors: accessId,
         usd,
         btc: {
           ...btc,

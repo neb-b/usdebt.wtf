@@ -4,11 +4,11 @@ import { Box, Text, Flex } from "@chakra-ui/react"
 import { toWords } from "number-to-words"
 import { BTC_SUPPLY, US_POPULATION, US_TAXPAYER_POPULATION } from "core/data"
 
-const TotalDebt = ({ amount }) => {
+const TotalDebt = ({ amount, ...rest }) => {
   const usDebtString = `$${Math.trunc(amount).toLocaleString()}`
 
   return (
-    <Box pb={0} pt={6} px={[6, 8]} position="relative" overflow="hidden" width="100%">
+    <Box position="relative" overflow="hidden" {...rest}>
       <Box bg="brand.yellow" display="inline-block" px={2}>
         <Text color="black" fontWeight="bold" fontSize={18} position="relative" zIndex={3}>
           Total US National Debt
@@ -47,11 +47,12 @@ const TotalDebt = ({ amount }) => {
   )
 }
 
-const format = (amount: number, decimals = 2) =>
-  amount.toLocaleString(undefined, {
+const format = (amount: number, decimals = 2) => {
+  return amount.toLocaleString(undefined, {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   })
+}
 
 const DebtClock = ({ usd, btc }) => {
   const [debt, setDebt] = React.useState(usd.initialAmount)
@@ -65,6 +66,7 @@ const DebtClock = ({ usd, btc }) => {
 
   const usDebtPerPerson = format(debt / US_POPULATION)
   const usDebtPerTaxPayer = format(debt / US_TAXPAYER_POPULATION)
+  const debtToGDP = format((debt / usd.currentGDP) * 100)
 
   React.useEffect(() => {
     let amountUsd = usd.initialAmount
@@ -82,73 +84,49 @@ const DebtClock = ({ usd, btc }) => {
 
   return (
     <Flex direction="column" alignItems="flex-start" position="relative">
-      <TotalDebt amount={debt} />
-
       <Box
         sx={{
           mt: 6,
           mx: [2],
           p: [4],
-          maxWidth: [undefined, "400px"],
+          maxWidth: [undefined, "460px"],
         }}
       >
-        <Box pb={8}>
-          <Text>Debt Per Person</Text>
+        <TotalDebt amount={debt} pb={12} />
 
-          <Text
-            sx={{
-              fontWeight: 900,
-              fontSize: 32,
-              fontFeatureSettings: '"tnum" 1',
-            }}
-          >
-            ${usDebtPerPerson}
-          </Text>
-        </Box>
-        <Box pb={8}>
-          <Text>Debt Per Taxpayer</Text>
-
-          <Text
-            sx={{
-              fontWeight: 900,
-              fontSize: 32,
-              fontFeatureSettings: '"tnum" 1',
-            }}
-          >
-            ${usDebtPerTaxPayer}
-          </Text>
-        </Box>
-
-        <Box pb={8}>
-          <Text>Fully diluted Bitcoin marketcap as a percentage of total US debt</Text>
-
-          <Text
-            sx={{
-              fontWeight: 900,
-              fontSize: 32,
-              fontFeatureSettings: '"tnum" 1',
-            }}
-          >
-            {btcMarketCapPercentOfDebtString}
-          </Text>
-        </Box>
-
-        <Box pb={8}>
-          <Text>Price of BTC for market cap to surpass total debt</Text>
-
-          <Text
-            sx={{
-              fontWeight: 900,
-              fontSize: 32,
-              fontFeatureSettings: '"tnum" 1',
-            }}
-          >
-            {btcRateToMatchDebtString}
-          </Text>
-        </Box>
+        <RowItem label="Debt To GDP" value={`${debtToGDP}%`} />
+        {/* <RowItem label="GDP" value={`$${format(Number(usd.currentGDP.toFixed(0)))}`} /> */}
+        <RowItem label="Debt Per Person" value={`$${usDebtPerPerson}`} />
+        <RowItem label="Debt Per Taxpayer" value={`$${usDebtPerTaxPayer}`} />
+        <RowItem
+          label="Fully diluted Bitcoin marketcap as a percentage of total US debt"
+          value={btcMarketCapPercentOfDebtString}
+        />
+        <RowItem
+          label="Price of BTC for market cap to surpass total debt"
+          value={btcRateToMatchDebtString}
+        />
       </Box>
     </Flex>
   )
 }
 
 export default DebtClock
+
+const RowItem = ({ label, value }) => {
+  return (
+    <Box pb={8}>
+      <Text>{label}</Text>
+
+      <Text
+        sx={{
+          fontWeight: 900,
+          fontSize: 32,
+          fontFeatureSettings: '"tnum" 1',
+        }}
+      >
+        {value}
+      </Text>
+    </Box>
+  )
+}

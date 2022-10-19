@@ -1,15 +1,23 @@
 import React from "react"
 
+import axios from "axios"
 import { Box, Text, Flex, Link } from "@chakra-ui/react"
 
 import GithubLogo from "./GithubLogo"
 
 type Props = {
   children: React.ReactNode
-  visitors?: number
 }
 
-const Layout: React.FC<Props> = ({ children, visitors }) => {
+const Layout: React.FC<Props> = ({ children }) => {
+  const [visitors, setVisitors] = React.useState<number | null>(null)
+
+  React.useEffect(() => {
+    axios.get("/api/visitors").then((res) => {
+      setVisitors(res.data.visitors)
+    })
+  })
+
   return (
     <Box
       sx={{
