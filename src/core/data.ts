@@ -1,7 +1,7 @@
-export const BTC_SUPPLY = 21000000
-export const US_POPULATION = 329500000
-export const US_TAXPAYER_POPULATION = 148245929
-export const US_GDP = 20940000000000
+import db from "core/db"
+import { getBtcPrice } from "pages/api/bitcoin"
+import type { DebtRecord } from "pages/index"
+import { US_POPULATION } from "./constants"
 
 // https://www.cbo.gov/data/budget-economic-data
 const GDP = [
@@ -9,7 +9,7 @@ const GDP = [
   { year: 2022, value: 24694112000000 }, // estimate
 ]
 
-export const getData = (records, btcPrice) => {
+const getValues = (records, btcPrice) => {
   if (!records) {
     return {}
   }
@@ -26,10 +26,9 @@ export const getData = (records, btcPrice) => {
 
   const todaysDate = new Date()
   const msSinceLastReport = todaysDate.getTime() - new Date(latestRecord.date).getTime()
-  const initialAmountUsd = msSinceLastReport * changePerMsUsd + latestRecord.us_debt
-  const initialAmountBtc = msSinceLastReport * changePerMsBtc + latestRecord.us_debt / btcPrice
-
-  const usDebtPerPerson = initialAmountUsd / US_POPULATION
+  const initialDebtAmountUSD = msSinceLastReport * changePerMsUsd + latestRecord.us_debt
+  const usDebtPerPerson = initialDebtAmountUSD / US_POPULATION
+  const initialDebtAmountBTC = msSinceLastReport * changePerMsBtc + latestRecord.us_debt / btcPrice
 
   // Debt to GDP
   const now = new Date()
@@ -44,11 +43,33 @@ export const getData = (records, btcPrice) => {
 
   return {
     usd: {
-      initialAmount: initialAmountUsd,
+      initialAmount: initialDebtAmountUSD,
       changePerMs: changePerMsUsd,
       debtPerPerson: usDebtPerPerson,
-      currentGDP,
+      currentGDP: currentGDP,
     },
-    btc: { initialAmount: initialAmountBtc, changePerMs: changePerMsBtc },
+    btc: { initialAmount: initialDebtAmountBTC, changePerMs: changePerMsBtc },
+  }
+}
+
+export const getData = async () => {
+  const { data, error } = await db
+    .from<DebtRecord>("money")
+    .select("date,us_debt")
+    .not("us_debt", "is", null)
+    .order("id", { ascending: false })
+    .limit(2)
+
+  if (error) throw error
+
+  const price = await getBtcPrice()
+  const { usd, btc } = getValues(data, price)
+
+  return {
+    usd,
+    btc: {
+      ...btc,
+      price,
+    },
   }
 }

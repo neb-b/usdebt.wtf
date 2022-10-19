@@ -8,9 +8,6 @@ const US_DEBT_API_URL =
   "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny?page[number]="
 const PAGE = 75
 
-const US_DEBT_INTEREST_API_URL =
-  "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/interest_expense?page[number]="
-
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {
     query: { auth },

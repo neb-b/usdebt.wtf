@@ -2,7 +2,7 @@ import React from "react"
 
 import { Box, Text, Flex } from "@chakra-ui/react"
 import { toWords } from "number-to-words"
-import { BTC_SUPPLY, US_POPULATION, US_TAXPAYER_POPULATION } from "core/data"
+import { BTC_SUPPLY, US_POPULATION, US_TAXPAYER_POPULATION } from "core/constants"
 
 const TotalDebt = ({ amount, ...rest }) => {
   const usDebtString = `$${Math.trunc(amount).toLocaleString()}`

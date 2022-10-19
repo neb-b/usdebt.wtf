@@ -1,11 +1,10 @@
 import React from "react"
 
-import axios from "axios"
-import { Box, Text, Flex } from "@chakra-ui/react"
+import { Box, Text } from "@chakra-ui/react"
 import { GetServerSideProps } from "next"
 
 import db from "core/db"
-import { getBtcPrice } from "pages/api/bitcoin"
+
 import DebtClock from "components/DebtClock"
 import Layout from "components/Layout"
 import { getData } from "core/data"
@@ -65,25 +64,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   try {
-    const { data, error } = await db
-      .from<DebtRecord>("money")
-      .select("date,us_debt")
-      .not("us_debt", "is", null)
-      .order("id", { ascending: false })
-      .limit(2)
-
-    if (error) throw error
-
-    const price = await getBtcPrice()
-    const { usd, btc } = getData(data, price)
+    const { usd, btc } = await getData()
 
     return {
       props: {
         usd,
-        btc: {
-          ...btc,
-          price,
-        },
+        btc,
       },
     }
   } catch (err) {
