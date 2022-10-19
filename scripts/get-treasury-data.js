@@ -3,16 +3,16 @@ const axios = require("axios")
 const fs = require("fs")
 
 const US_API_URL =
-  "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny?page[number]="
+  "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/interest_expense?page[number]="
 
 const delayIncrement = 500
 let delay = 0
 
-const getServerSideProps = async () => {
+const start = async () => {
   try {
     let promises = []
 
-    for (let i = 73; i <= 75; i++) {
+    for (let i = 1; i <= 56; i++) {
       promises.push(
         new Promise((resolve) => setTimeout(resolve, delay)).then(() => axios.get(US_API_URL + i))
       )
@@ -47,7 +47,7 @@ const getServerSideProps = async () => {
         }
 
         // write the results to a json file
-        fs.writeFile("./src/data/afsdfds.json", JSON.stringify(results), (err) => {
+        fs.writeFile("./data.json", JSON.stringify(results), (err) => {
           if (err) {
             console.log("Error writing file", err)
           } else {
@@ -64,4 +64,4 @@ const getServerSideProps = async () => {
   }
 }
 
-getServerSideProps()
+start()
