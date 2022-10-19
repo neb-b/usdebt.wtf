@@ -3,7 +3,6 @@ import { ChakraProvider } from "@chakra-ui/react"
 import { AppProps } from "next/app"
 import Head from "next/head"
 
-import Layout from "components/Layout"
 import theme from "theme"
 
 function App({ Component, pageProps }: AppProps) {
@@ -23,9 +22,7 @@ function App({ Component, pageProps }: AppProps) {
         <meta name="twitter:image" content="https://usdebt.wtf/31.png" />
         <meta name="twitter:title" content="usdebt.wtf" />
       </Head>
-      <ChakraProvider theme={theme}>
-        <Layout>{isMounted && <Component {...pageProps} />}</Layout>
-      </ChakraProvider>
+      <ChakraProvider theme={theme}>{isMounted && <Component {...pageProps} />}</ChakraProvider>
     </>
   )
 }

@@ -7,6 +7,7 @@ import { GetServerSideProps } from "next"
 import db from "core/db"
 import { getBtcPrice } from "pages/api/bitcoin"
 import DebtClock from "components/DebtClock"
+import Layout from "components/Layout"
 import { getData } from "core/data"
 
 export type DebtRecord = {
@@ -17,35 +18,34 @@ export type DebtRecord = {
   btc_debt: number
 }
 
-type ErrorProps = { error: string; records: undefined; btcPrice: undefined }
-type DataProps = {
-  error: undefined
-  usd: {
+type Props = {
+  error?: string
+  visitors?: number
+  usd?: {
     initialAmount: number
     changePerMs: number
     debtPerPerson: number
   }
-  btc: {
+  btc?: {
     price: number
     initialAmount: number
     changePerMs: number
   }
 }
 
-type Props = ErrorProps | DataProps
-
-// @ts-ignore
-const Home: React.FC<Props> = ({ error: serverSideError, usd, btc }) => {
+const Home: React.FC<Props> = ({ error: serverSideError, usd, btc, visitors }) => {
   return (
-    <Box>
-      {serverSideError && (
-        <Text color="red.500" bg="red.200" p={4} m={4} borderRadius={10}>
-          {serverSideError}
-        </Text>
-      )}
+    <Layout visitors={visitors}>
+      <Box>
+        {serverSideError && (
+          <Text color="red.500" bg="red.200" fontWeight={600} p={4} m={4} borderRadius={10}>
+            {serverSideError}
+          </Text>
+        )}
 
-      {usd && btc && <DebtClock usd={usd} btc={btc} />}
-    </Box>
+        {usd && btc && <DebtClock usd={usd} btc={btc} />}
+      </Box>
+    </Layout>
   )
 }
 
@@ -73,12 +73,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     if (error) throw error
 
-    const price = await getBtcPrice()
+    const { data: accessData, error: accessError } = await db
+      .from<{ id: number }>("access")
+      .select("id")
+      .order("id", { ascending: false })
+      .limit(1)
 
+    if (accessError) throw accessError
+
+    const price = await getBtcPrice()
     const { usd, btc } = getData(data, price)
+    const { id: accessId } = accessData[0]
 
     return {
       props: {
+        visitors: accessId,
         usd,
         btc: {
           ...btc,
@@ -87,6 +96,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     }
   } catch (err) {
+    if (process.env.NODE_ENV !== "production") {
+      console.log(err)
+    }
+
     let message = "Unknown Error"
 
     if (err instanceof Error) {

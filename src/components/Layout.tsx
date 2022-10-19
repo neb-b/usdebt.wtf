@@ -6,13 +6,14 @@ import GithubLogo from "./GithubLogo"
 
 type Props = {
   children: React.ReactNode
+  visitors?: number
 }
 
-const Layout: React.FC<Props> = ({ children }) => {
+const Layout: React.FC<Props> = ({ children, visitors }) => {
   return (
     <Box
       sx={{
-        bg: "#111",
+        bg: "brand.bg",
         position: "relative",
         minHeight: "100vh",
       }}
@@ -38,7 +39,7 @@ const Layout: React.FC<Props> = ({ children }) => {
           <Box pb={20}>{children}</Box>
         </Box>
 
-        <Flex p={4} alignItems="center" mt="auto">
+        <Flex p={4} alignItems="center" mt="auto" width="100%">
           <Link color="brand.orange" href="https://github.com/neb-b/debtclock">
             <Flex alignItems="center">
               <GithubLogo />
@@ -54,6 +55,12 @@ const Layout: React.FC<Props> = ({ children }) => {
               usdebtclock.org
             </Link>
           </Flex>
+
+          {visitors && (
+            <Text ml="auto" fontSize={12}>
+              {visitors.toLocaleString()} visitors
+            </Text>
+          )}
         </Flex>
       </Box>
     </Box>

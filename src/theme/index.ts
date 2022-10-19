@@ -10,10 +10,18 @@ const colors = {
   brand: {
     orange: "#fd691f",
     yellow: "#FFE34F",
+    bg: "#111111",
   },
 }
 
 const theme = {
+  styles: {
+    global: {
+      body: {
+        bg: "brand.bg",
+      },
+    },
+  },
   colors,
   fonts: {
     heading: `'Chivo', -apple-system, Helvetica, Arial`,
