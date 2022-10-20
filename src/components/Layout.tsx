@@ -47,8 +47,14 @@ const Layout: React.FC<Props> = ({ children }) => {
           <Box pb={20}>{children}</Box>
         </Box>
 
-        <Flex p={4} alignItems="center" mt="auto" width="100%">
-          <Link color="brand.orange" href="https://github.com/neb-b/debtclock">
+        <Flex
+          p={4}
+          flexDirection={["column", "row"]}
+          alignItems={["flex-start", "center"]}
+          mt="auto"
+          width="100%"
+        >
+          <Link color="brand.orange" href="https://github.com/neb-b/debtclock" mb={[2, 0]}>
             <Flex alignItems="center">
               <GithubLogo />
               <Text color="brand.orange" ml={2}>
@@ -57,7 +63,7 @@ const Layout: React.FC<Props> = ({ children }) => {
             </Flex>
           </Link>
 
-          <Flex ml={4}>
+          <Flex ml={[0, 4]}>
             <Text mr={1}>Inspired by</Text>
             <Link color="brand.orange" href="https://usdebtclock.org">
               usdebtclock.org
@@ -65,7 +71,7 @@ const Layout: React.FC<Props> = ({ children }) => {
           </Flex>
 
           {visitors && (
-            <Text ml="auto" fontSize={12}>
+            <Text ml={[0, "auto"]} fontSize={12} mt={[4, 0]}>
               {visitors.toLocaleString()} visitors
             </Text>
           )}

@@ -10,7 +10,7 @@ const TotalDebt = ({ amount, ...rest }) => {
   return (
     <Box position="relative" overflow="hidden" {...rest}>
       <Box bg="brand.yellow" display="inline-block" px={2}>
-        <Text color="black" fontWeight="bold" fontSize={18} position="relative" zIndex={3}>
+        <Text color="black" fontWeight={900} fontSize={18} position="relative" zIndex={3}>
           Total US National Debt
         </Text>
       </Box>
@@ -18,7 +18,7 @@ const TotalDebt = ({ amount, ...rest }) => {
       <Text
         color="brand.orange"
         fontSize={56}
-        fontWeight={800}
+        fontWeight={900}
         lineHeight={1}
         letterSpacing="-.8px"
         mt={3}
@@ -57,6 +57,7 @@ const format = (amount: number, decimals = 2) => {
 const DebtClock = ({ usd, btc }) => {
   const [debt, setDebt] = React.useState(usd.initialAmount)
   const [debtBtc, setDebtBtc] = React.useState(btc.initialAmount)
+  const [interest, setInterest] = React.useState(usd.interest)
 
   const btcRateToMatchDebt = Number(debt / BTC_SUPPLY)
   let btcRateToMatchDebtString = `$${format(btcRateToMatchDebt)}`
@@ -71,16 +72,25 @@ const DebtClock = ({ usd, btc }) => {
   React.useEffect(() => {
     let amountUsd = usd.initialAmount
     let amountBtc = btc.initialAmount
+    let amountInterest = usd.interestInitialAmount
 
     let interval = setInterval(() => {
       amountUsd += usd.changePerMs * 20
       amountBtc += btc.changePerMs * 20
+      amountInterest += usd.interestChangePerMs * 20
       setDebt(amountUsd)
       setDebtBtc(amountBtc)
+      setInterest(format(amountInterest))
     }, 20)
-
     return () => clearInterval(interval)
-  }, [usd.initialAmount, usd.changePerMs, btc.initialAmount, btc.changePerMs])
+  }, [
+    usd.initialAmount,
+    usd.changePerMs,
+    btc.initialAmount,
+    btc.changePerMs,
+    usd.interestInitialAmount,
+    usd.interestChangePerMs,
+  ])
 
   return (
     <Flex direction="column" alignItems="flex-start" position="relative">
@@ -94,6 +104,7 @@ const DebtClock = ({ usd, btc }) => {
       >
         <TotalDebt amount={debt} pb={12} />
 
+        <RowItem label="Total paid in interest on debt" value={`$${interest}`} />
         <RowItem label="Debt To GDP" value={`${debtToGDP}%`} />
         {/* <RowItem label="GDP" value={`$${format(Number(usd.currentGDP.toFixed(0)))}`} /> */}
         <RowItem label="Debt Per Person" value={`$${usDebtPerPerson}`} />
@@ -116,7 +127,9 @@ export default DebtClock
 const RowItem = ({ label, value }) => {
   return (
     <Box pb={8}>
-      <Text>{label}</Text>
+      <Text fontWeight={400} maxWidth={["300px"]}>
+        {label}
+      </Text>
 
       <Text
         sx={{

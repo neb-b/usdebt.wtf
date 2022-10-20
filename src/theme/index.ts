@@ -31,7 +31,8 @@ const theme = {
     Text: {
       baseStyle: {
         color: "white",
-        fontWeight: 500,
+        fontWeight: 600,
+        letterSpacing: "-0.2px",
       },
     },
     Heading: {

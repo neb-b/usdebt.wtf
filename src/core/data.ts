@@ -2,6 +2,7 @@ import db from "core/db"
 import { getBtcPrice } from "pages/api/bitcoin"
 import type { DebtRecord } from "pages/index"
 import { US_POPULATION } from "./constants"
+import interestData from "./interest-payment-history.json"
 
 // https://www.cbo.gov/data/budget-economic-data
 const GDP = [
@@ -41,12 +42,21 @@ const getValues = (records, btcPrice) => {
   const totalAddedThisYear = (thisYearGdp.value - lastYearGdp.value) * (dayOfYear / 365)
   const currentGDP = lastYearGdp.value + totalAddedThisYear
 
+  // Interest
+  const latestInterestRecord = interestData[interestData.length - 1]
+  const secondLatestInterestRecord = interestData[interestData.length - 2]
+  const currentInterest = latestInterestRecord.total
+  const interestPaymentRateInMs =
+    (latestInterestRecord.total - secondLatestInterestRecord.total) / 30.5 / 24 / 60 / 60 / 1000
+
   return {
     usd: {
       initialAmount: initialDebtAmountUSD,
       changePerMs: changePerMsUsd,
       debtPerPerson: usDebtPerPerson,
       currentGDP: currentGDP,
+      interestInitialAmount: currentInterest,
+      interestChangePerMs: interestPaymentRateInMs,
     },
     btc: { initialAmount: initialDebtAmountBTC, changePerMs: changePerMsBtc },
   }
