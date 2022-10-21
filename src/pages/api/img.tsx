@@ -1,11 +1,11 @@
 import { ImageResponse } from "@vercel/og"
-import { NextRequest } from "next/server"
+import type { NextApiRequest } from "next"
 
 export const config = {
   runtime: "experimental-edge",
 }
 
-export default function handler(req: NextRequest) {
+export default function handler(req: NextApiRequest) {
   try {
     const { searchParams } = new URL(req.url)
 
@@ -37,6 +37,7 @@ export default function handler(req: NextRequest) {
               justifyItems: "center",
             }}
           >
+            {/* eslint-disable-next-line */}
             <img
               alt="Vercel"
               height={200}
