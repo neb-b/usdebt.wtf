@@ -29,21 +29,24 @@ const Layout: React.FC<Props> = ({ children }) => {
         minHeight: "100vh",
       }}
     >
-      <Flex
-        alignItems="center"
-        px={[6]}
-        py={[4]}
-        sx={{ zIndex: 1, position: "relative", height: "80px" }}
-      >
-        <Text fontSize={28} fontWeight={800} color="brand.orange">
-          wtf?
-        </Text>
-      </Flex>
+      {!isTweetScreenshot && (
+        <Flex
+          alignItems="center"
+          px={[6]}
+          py={[4]}
+          sx={{ zIndex: 1, position: "relative", height: "80px" }}
+        >
+          <Text fontSize={28} fontWeight={800} color="brand.orange">
+            wtf?
+          </Text>
+        </Flex>
+      )}
       <Box
         sx={{
           minHeight: "100vh" || `calc(100vh - 80px)`,
           display: "flex",
           flexDirection: "column",
+          pt: isTweetScreenshot ? 2 : 0,
         }}
       >
         <Box sx={{ mx: "auto", maxWidth: "30rem", mt: isTweetScreenshot ? 0 : 6 }}>
