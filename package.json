@@ -20,12 +20,15 @@
     "css-doodle": "^0.29.1",
     "framer-motion": "^7.3.5",
     "next": "^12.3.0",
+    "node-twitter": "^0.5.3",
     "number-to-words": "^1.2.4",
     "react": "^18.2.0",
     "react-charts": "^3.0.0-beta.48",
     "react-dom": "^18.2.0",
     "recharts": "^2.1.14",
-    "trendline": "^0.3.1"
+    "trendline": "^0.3.1",
+    "twitter": "^1.7.1",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.7.18",

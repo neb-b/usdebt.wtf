@@ -2,6 +2,7 @@ import React from "react"
 
 import { Box, Text, Flex } from "@chakra-ui/react"
 import { toWords } from "number-to-words"
+import { format } from "core/utils"
 import { BTC_SUPPLY, US_POPULATION, US_TAXPAYER_POPULATION } from "core/constants"
 
 const TotalDebt = ({ amount, ...rest }) => {
@@ -45,13 +46,6 @@ const TotalDebt = ({ amount, ...rest }) => {
       </Box>
     </Box>
   )
-}
-
-const format = (amount: number, decimals = 2) => {
-  return amount.toLocaleString(undefined, {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  })
 }
 
 const DebtClock = ({ usd, btc }) => {
