@@ -27,6 +27,7 @@ const Layout: React.FC<Props> = ({ children }) => {
         bg: "brand.bg",
         position: "relative",
         minHeight: "100vh",
+        px: isTweetScreenshot ? 4 : 0,
       }}
     >
       {!isTweetScreenshot && (
@@ -46,7 +47,7 @@ const Layout: React.FC<Props> = ({ children }) => {
           minHeight: "100vh" || `calc(100vh - 80px)`,
           display: "flex",
           flexDirection: "column",
-          pt: isTweetScreenshot ? 2 : 0,
+          pt: isTweetScreenshot ? 4 : 0,
         }}
       >
         <Box sx={{ mx: "auto", maxWidth: "30rem", mt: isTweetScreenshot ? 0 : 6 }}>
