@@ -7,10 +7,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     query: { auth },
   } = req
 
-  if (process.env.NODE_ENV === "production" && auth !== process.env.PING_AUTH) {
-    res.status(401).json({ error: "unauthorized" })
-    return
-  }
+  // if (process.env.NODE_ENV === "production" && auth !== process.env.PING_AUTH) {
+  //   res.status(401).json({ error: "unauthorized" })
+  //   return
+  // }
 
   try {
     const { usd } = await getData()
