@@ -96,7 +96,6 @@ const DebtClock = ({ usd, btc }) => {
     <Flex direction="column" alignItems="flex-start" position="relative">
       <Box
         sx={{
-          mt: 6,
           mx: [2],
           p: [4],
           maxWidth: [undefined, "460px"],

@@ -1,6 +1,7 @@
 import React from "react"
 
 import axios from "axios"
+import { useRouter } from "next/router"
 import { Box, Text, Flex, Link } from "@chakra-ui/react"
 
 import GithubLogo from "./GithubLogo"
@@ -10,7 +11,9 @@ type Props = {
 }
 
 const Layout: React.FC<Props> = ({ children }) => {
+  const { query } = useRouter()
   const [visitors, setVisitors] = React.useState<number | null>(null)
+  const isTweetScreenshot = !!query.screenshot
 
   React.useEffect(() => {
     axios.get("/api/visitors").then((res) => {
@@ -33,7 +36,7 @@ const Layout: React.FC<Props> = ({ children }) => {
         sx={{ zIndex: 1, position: "relative", height: "80px" }}
       >
         <Text fontSize={28} fontWeight={800} color="brand.orange">
-          wtf??
+          wtf?
         </Text>
       </Flex>
       <Box
@@ -43,7 +46,7 @@ const Layout: React.FC<Props> = ({ children }) => {
           flexDirection: "column",
         }}
       >
-        <Box sx={{ mx: "auto", maxWidth: "30rem" }}>
+        <Box sx={{ mx: "auto", maxWidth: "30rem", mt: isTweetScreenshot ? 0 : 6 }}>
           <Box pb={20}>{children}</Box>
         </Box>
 
