@@ -25,7 +25,7 @@ const getValues = (records, btcPrice) => {
   const changePerMsBtc =
     (previousLatestRecord.us_debt / btcPrice - latestRecord.us_debt / btcPrice) / differenceInMs
 
-  const todaysDate = new Date("2022-11-14")
+  const todaysDate = new Date()
   const msSinceLastReport = todaysDate.getTime() - new Date(latestRecord.date).getTime()
   const initialDebtAmountUSD = msSinceLastReport * changePerMsUsd + latestRecord.us_debt
   const usDebtPerPerson = initialDebtAmountUSD / US_POPULATION
