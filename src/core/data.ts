@@ -25,7 +25,7 @@ const getValues = (records, btcPrice) => {
   const changePerMsBtc =
     (previousLatestRecord.us_debt / btcPrice - latestRecord.us_debt / btcPrice) / differenceInMs
 
-  const todaysDate = new Date()
+  const todaysDate = new Date("2022-11-14")
   const msSinceLastReport = todaysDate.getTime() - new Date(latestRecord.date).getTime()
   const initialDebtAmountUSD = msSinceLastReport * changePerMsUsd + latestRecord.us_debt
   const usDebtPerPerson = initialDebtAmountUSD / US_POPULATION
@@ -45,9 +45,29 @@ const getValues = (records, btcPrice) => {
   // Interest
   const latestInterestRecord = interestData[interestData.length - 1]
   const secondLatestInterestRecord = interestData[interestData.length - 2]
-  const currentInterest = latestInterestRecord.total
-  const interestPaymentRateInMs =
-    (latestInterestRecord.total - secondLatestInterestRecord.total) / 30.5 / 24 / 60 / 60 / 1000
+  const firstDayOfFiscalYear = new Date(`${new Date().getFullYear()}-10-01`)
+  const msSinceFirstDayOfFiscalYear = todaysDate.getTime() - firstDayOfFiscalYear.getTime()
+  const msInYear = 1000 * 60 * 60 * 24 * 365
+
+  let initialInterestAmount: number
+  let interestPaymentRateInMs: number
+  let estimatedYearlyInterest: number
+  // If last reported is september 30, then we are estimating the very first interest data of the year
+  // Take current rate in ms and multiply by ms since first day of fiscal year
+  if (latestInterestRecord.date.includes("-09-30")) {
+    interestPaymentRateInMs =
+      (latestInterestRecord.total - secondLatestInterestRecord.total) / 30.5 / 24 / 60 / 60 / 1000
+    initialInterestAmount = msSinceFirstDayOfFiscalYear * interestPaymentRateInMs
+    estimatedYearlyInterest = interestPaymentRateInMs * msInYear
+  } else {
+    interestPaymentRateInMs = latestInterestRecord.total / msSinceFirstDayOfFiscalYear
+    initialInterestAmount =
+      latestInterestRecord.total + msSinceFirstDayOfFiscalYear * interestPaymentRateInMs
+
+    // Figure out yearly estimate by adding last reported amount + (currentRateInMs * msLeftInYear)
+    const msLeftInYear = msInYear - msSinceFirstDayOfFiscalYear
+    estimatedYearlyInterest = latestInterestRecord.total + interestPaymentRateInMs * msLeftInYear
+  }
 
   return {
     usd: {
@@ -55,8 +75,9 @@ const getValues = (records, btcPrice) => {
       changePerMs: changePerMsUsd,
       debtPerPerson: usDebtPerPerson,
       currentGDP: currentGDP,
-      interestInitialAmount: currentInterest,
+      interestInitialAmount: initialInterestAmount,
       interestChangePerMs: interestPaymentRateInMs,
+      interestYearlyAmount: estimatedYearlyInterest,
     },
     btc: { initialAmount: initialDebtAmountBTC, changePerMs: changePerMsBtc },
   }

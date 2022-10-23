@@ -55,13 +55,12 @@ const DebtClock = ({ usd, btc }) => {
 
   const btcRateToMatchDebt = Number(debt / BTC_SUPPLY)
   let btcRateToMatchDebtString = `$${format(btcRateToMatchDebt)}`
-
   const btcMarketCapPercentOfDebt = ((btc.price * BTC_SUPPLY) / debt) * 100
   const btcMarketCapPercentOfDebtString = `${format(btcMarketCapPercentOfDebt, 2)}%`
-
   const usDebtPerPerson = format(debt / US_POPULATION)
   const usDebtPerTaxPayer = format(debt / US_TAXPAYER_POPULATION)
   const debtToGDP = format((debt / usd.currentGDP) * 100)
+  const yearlyInterest = format(usd.interestYearlyAmount, 0)
 
   React.useEffect(() => {
     let amountUsd = usd.initialAmount
@@ -97,7 +96,19 @@ const DebtClock = ({ usd, btc }) => {
       >
         <TotalDebt amount={debt} pb={12} />
 
-        <RowItem label="Total paid in interest on debt" value={`$${interest}`} />
+        <RowItem
+          label="Yearly interest on debt at current rate"
+          value={`$${yearlyInterest}`}
+          sub={
+            <Text fontSize={14} fontWeight={400}>
+              <Text color="brand.yellow" display="inline">
+                ${interest}
+              </Text>{" "}
+              paid so far this year
+            </Text>
+          }
+        />
+
         <RowItem label="Debt To GDP" value={`${debtToGDP}%`} />
         {/* <RowItem label="GDP" value={`$${format(Number(usd.currentGDP.toFixed(0)))}`} /> */}
         <RowItem label="Debt Per Person" value={`$${usDebtPerPerson}`} />
@@ -117,7 +128,13 @@ const DebtClock = ({ usd, btc }) => {
 
 export default DebtClock
 
-const RowItem = ({ label, value }) => {
+type RowItemProps = {
+  label: string
+  value: string
+  sub?: React.ReactNode
+}
+
+const RowItem = ({ label, value, sub }: RowItemProps) => {
   return (
     <Box pb={8}>
       <Text fontWeight={400} maxWidth={["300px"]}>
@@ -133,6 +150,8 @@ const RowItem = ({ label, value }) => {
       >
         {value}
       </Text>
+
+      {sub}
     </Box>
   )
 }
