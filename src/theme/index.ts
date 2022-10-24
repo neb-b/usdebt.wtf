@@ -6,7 +6,7 @@ const config: ThemeConfig = {
   initialColorMode: "dark",
 }
 
-const colors = {
+export const colors = {
   brand: {
     orange: "#fd691f",
     yellow: "#FFE34F",

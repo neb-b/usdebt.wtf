@@ -1,5 +1,5 @@
 import db from "core/db"
-import { getBtcPrice } from "pages/api/bitcoin"
+import { getBtcData } from "pages/api/bitcoin"
 import type { DebtRecord } from "pages/index"
 import { US_POPULATION } from "./constants"
 import interestData from "./interest-payment-history.json"
@@ -93,7 +93,7 @@ export const getData = async () => {
 
   if (error) throw error
 
-  const price = await getBtcPrice()
+  const { price, blockHeight } = await getBtcData()
   const { usd, btc } = getValues(data, price)
 
   return {
@@ -101,6 +101,7 @@ export const getData = async () => {
     btc: {
       ...btc,
       price,
+      blockHeight,
     },
   }
 }

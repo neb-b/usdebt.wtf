@@ -113,6 +113,7 @@ const DebtClock = ({ usd, btc }) => {
         {/* <RowItem label="GDP" value={`$${format(Number(usd.currentGDP.toFixed(0)))}`} /> */}
         <RowItem label="Debt Per Person" value={`$${usDebtPerPerson}`} />
         <RowItem label="Debt Per Taxpayer" value={`$${usDebtPerTaxPayer}`} />
+        <RowItem label="Bitcoin Block Height" value={format(btc.blockHeight, 0)} />
         <RowItem
           label="Fully diluted Bitcoin marketcap as a percentage of total US debt"
           value={btcMarketCapPercentOfDebtString}

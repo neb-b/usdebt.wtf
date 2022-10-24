@@ -1,12 +1,17 @@
-import axios from "axios"
 import { NextApiResponse, NextApiRequest } from "next"
 import db from "core/db"
 
-const BTC_API_URL = `https://api.coinbase.com/v2/prices/spot?currency=USD`
+const BTC_API_URL = "https://api.coinbase.com/v2/prices/spot?currency=USD"
+const MEMPOOL_SPACE_API_URL = "https://mempool.space/api/blocks/tip/height"
 
-export const getBtcPrice = async () => {
-  const { data: btcData } = await axios.get(BTC_API_URL)
-  return btcData.data.amount
+export const getBtcData = async () => {
+  const res = await fetch(BTC_API_URL)
+  const { data: btcData } = await res.json()
+
+  const blockRes = await fetch(MEMPOOL_SPACE_API_URL)
+  const blockHeight = await blockRes.json()
+
+  return { price: btcData.amount, blockHeight }
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -20,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const btcPrice = await getBtcPrice()
+    const btcPrice = await getBtcData()
     const date = new Date().toISOString().split("T")[0]
 
     const { error } = await db.from("money").insert({
