@@ -34,18 +34,18 @@ export default async function handler() {
         >
           <div
             style={{
-              fontSize: 40,
+              fontSize: 64,
               color: "white",
               fontWeight: "bold",
               display: "flex",
-              marginBottom: "32px",
             }}
           >
             current US debt
           </div>
           <div
             style={{
-              fontSize: 64,
+              fontSize: 90,
+              lineHeight: 1.1,
               color: "#fd691f",
               fontWeight: "bold",
               display: "flex",
@@ -56,16 +56,16 @@ export default async function handler() {
 
           <div
             style={{
-              fontSize: 32,
+              fontSize: 42,
               color: "#FFE34F",
               fontWeight: "bold",
               position: "absolute",
-              bottom: "32px",
+              top: "32px",
               right: "32px",
               display: "flex",
             }}
           >
-            block {format(btc.blockHeight, 0)}
+            {format(btc.blockHeight, 0)}
           </div>
         </div>
       ),
