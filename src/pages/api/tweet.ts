@@ -23,9 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { usd } = await getData()
-
-    await tweet(`$${format(usd.initialAmount, 0)}`)
+    await tweet()
     res.status(200).json({ status: "ok" })
   } catch (e: any) {
     console.log("error: ", e)
@@ -33,17 +31,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 }
 
-const tweet = async (status) => {
+const tweet = async () => {
   return new Promise<void>(async (resolve, reject) => {
     try {
-      const { data } = await axios.get("https://usdebt.wtf/api/ogimg", {
+      const { data } = await axios.get("https://usdebt.wtf/api/og", {
         responseType: "arraybuffer",
       })
 
-      client.post("media/upload", { media: data }, function (error, media) {
+      client.post("media/upload", { media: data }, async (error, media) => {
         if (error) {
           throw error
         }
+
+        const { usd } = await getData()
+        const status = `$${format(usd.initialAmount, 0)}`
 
         client.post(
           "statuses/update",
