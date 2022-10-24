@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
+import axios from "axios"
+
 import Twitter from "twitter"
 import { getData } from "core/data"
 import { format } from "core/utils"
@@ -23,10 +25,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const { usd } = await getData()
 
-    await tweet("US Debt: $" + format(usd.initialAmount, 0))
+    await tweet(`$${format(usd.initialAmount, 0)}`)
     res.status(200).json({ status: "ok" })
   } catch (e: any) {
-    console.log(`error: ${e}`)
+    console.log("error: ", e)
     return res.status(400).json({ status: e.message })
   }
 }
@@ -34,14 +36,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 const tweet = async (status) => {
   return new Promise<void>(async (resolve, reject) => {
     try {
-      client.post("statuses/update", { status }, function (error, tweet) {
+      const { data } = await axios.get("https://usdebt.wtf/api/ogimg", {
+        responseType: "arraybuffer",
+      })
+
+      client.post("media/upload", { media: data }, function (error, media) {
         if (error) {
-          reject(error)
+          throw error
         }
 
-        return resolve()
+        client.post(
+          "statuses/update",
+          { media_ids: media.media_id_string, status },
+          function (error) {
+            if (error) {
+              reject(error)
+            }
+
+            return resolve()
+          }
+        )
       })
     } catch (e) {
+      console.log("error: ", JSON.stringify(e))
       reject(e)
     }
   })
