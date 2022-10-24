@@ -23,7 +23,7 @@ export default async function handler() {
             background: "#111",
             width: "100%",
             height: "100%",
-            padding: "0 64px",
+            padding: "0 32px",
             display: "flex",
             flexDirection: "column",
             textAlign: "center",
@@ -54,19 +54,19 @@ export default async function handler() {
             {toWords(Math.round(usd.initialAmount / 1000000) * 1000000)} dollars
           </div>
 
-          <div
+          {/* <div
             style={{
               fontSize: 42,
               color: "#FFE34F",
               fontWeight: "bold",
               position: "absolute",
-              top: "32px",
+              bottom: "32px",
               right: "32px",
               display: "flex",
             }}
           >
             {format(btc.blockHeight, 0)}
-          </div>
+          </div> */}
         </div>
       ),
       {
