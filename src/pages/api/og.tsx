@@ -2,7 +2,6 @@ import { ImageResponse } from "@vercel/og"
 import { getData } from "core/data"
 import { format } from "core/utils"
 import { toWords } from "number-to-words"
-import { colors } from "theme"
 
 export const config = {
   runtime: "experimental-edge",
@@ -21,7 +20,7 @@ export default async function handler() {
       (
         <div
           style={{
-            background: colors.brand.bg,
+            background: "#111",
             width: "100%",
             height: "100%",
             padding: "0 64px",
@@ -47,7 +46,7 @@ export default async function handler() {
           <div
             style={{
               fontSize: 64,
-              color: colors.brand.orange,
+              color: "#fd691f",
               fontWeight: "bold",
               display: "flex",
             }}
@@ -58,7 +57,7 @@ export default async function handler() {
           <div
             style={{
               fontSize: 32,
-              color: colors.brand.yellow,
+              color: "#FFE34F",
               fontWeight: "bold",
               position: "absolute",
               bottom: "32px",
