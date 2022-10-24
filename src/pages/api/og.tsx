@@ -64,7 +64,7 @@ export default async function handler() {
               display: "flex",
             }}
           >
-            {format(btc.blockHeight, 0)}
+            block {format(btc.blockHeight, 0)}
           </div>
         </div>
       ),
