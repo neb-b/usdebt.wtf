@@ -48,6 +48,7 @@ export default async function handler() {
               color: "#fd691f",
               fontWeight: "bold",
               display: "flex",
+              marginBottom: "48px",
             }}
           >
             {toWords(Math.round(usd.initialAmount / 1000000) * 1000000)} dollars
