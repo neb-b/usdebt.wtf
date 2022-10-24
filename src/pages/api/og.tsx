@@ -23,7 +23,7 @@ export default async function handler() {
             background: "#111",
             width: "100%",
             height: "100%",
-            padding: "0 36px",
+            padding: "0 64px",
             display: "flex",
             flexDirection: "column",
             textAlign: "left",
@@ -61,7 +61,7 @@ export default async function handler() {
               fontWeight: "bold",
               position: "absolute",
               bottom: "24px",
-              right: "24px",
+              right: "64px",
               display: "flex",
             }}
           >
