@@ -11,6 +11,7 @@ export const colors = {
     orange: "#fd691f",
     yellow: "#FFE34F",
     bg: "#111111",
+    gray: "#2d2d2d",
   },
 }
 
@@ -31,13 +32,21 @@ const theme = {
     Text: {
       baseStyle: {
         color: "white",
-        fontWeight: 600,
+        fontWeight: 400,
         letterSpacing: "-0.2px",
       },
     },
     Heading: {
       baseStyle: {
         color: "white",
+      },
+    },
+    Link: {
+      baseStyle: {
+        fontWeight: 400,
+        _hover: {
+          color: "brand.orange",
+        },
       },
     },
   },

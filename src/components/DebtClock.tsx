@@ -1,6 +1,6 @@
 import React from "react"
 
-import { Box, Text, Flex } from "@chakra-ui/react"
+import { Box, Text, Flex, Link } from "@chakra-ui/react"
 import { toWords } from "number-to-words"
 import { format } from "core/utils"
 import { BTC_SUPPLY, US_POPULATION, US_TAXPAYER_POPULATION } from "core/constants"
@@ -27,11 +27,10 @@ const TotalDebt = ({ amount, ...rest }) => {
         {toWords(Math.round(amount / 1000000) * 1000000).split("trillion")[0] + " trillion"} dollars
       </Text>
 
-      <Box my={2} position="relative" w="100%">
+      <Box my={2} position="relative" w="100%" display="flex" alignItems="center">
         <Text
           sx={{
             fontSize: 24,
-            fontWeight: 500,
             whiteSpace: "normal",
             display: "inline",
             lineHeight: 1,
@@ -42,6 +41,9 @@ const TotalDebt = ({ amount, ...rest }) => {
           }}
         >
           {usDebtString}
+        </Text>
+        <Text fontSize={12} ml={2} fontWeight={400}>
+          <Link href="#source-1">[1]</Link>
         </Text>
       </Box>
     </Box>
@@ -105,12 +107,14 @@ const DebtClock = ({ usd, btc }) => {
                 ${interest}
               </Text>{" "}
               paid so far this year
+              <Text fontSize={12} mb="auto" ml={2} fontWeight={400} display="inline-block">
+                <Link href="#source-2">[2]</Link>
+              </Text>
             </Text>
           }
         />
 
         <RowItem label="Debt To GDP" value={`${debtToGDP}%`} />
-        {/* <RowItem label="GDP" value={`$${format(Number(usd.currentGDP.toFixed(0)))}`} /> */}
         <RowItem label="Debt Per Person" value={`$${usDebtPerPerson}`} />
         <RowItem label="Debt Per Taxpayer" value={`$${usDebtPerTaxPayer}`} />
         <RowItem label="Bitcoin Block Height" value={format(btc.blockHeight, 0)} />
@@ -122,6 +126,16 @@ const DebtClock = ({ usd, btc }) => {
           label="Price of BTC for market cap to surpass total debt"
           value={btcRateToMatchDebtString}
         />
+        <Box mt={8} pr={6}>
+          <SourceItem
+            id={1}
+            link="https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/debt-to-the-penny"
+          />
+          <SourceItem
+            id={2}
+            link="https://fiscaldata.treasury.gov/datasets/interest-expense-debt-outstanding/interest-expense-on-the-public-debt-outstanding"
+          />
+        </Box>
       </Box>
     </Flex>
   )
@@ -153,6 +167,23 @@ const RowItem = ({ label, value, sub }: RowItemProps) => {
       </Text>
 
       {sub}
+    </Box>
+  )
+}
+
+type SourceItemProps = {
+  link: string
+  id: number
+}
+
+const SourceItem = ({ link, id }: SourceItemProps) => {
+  return (
+    <Box id={`source-${id}`} color="white" fontWeight={400} fontSize={12} display="flex" mb={4}>
+      <Text mr={2}>[{id}]</Text>
+
+      <Text color="brand.orange">
+        <Link href={link}>{link}</Link>
+      </Text>
     </Box>
   )
 }

@@ -38,7 +38,7 @@ const Home: React.FC<Props> = ({ error: serverSideError, usd, btc }) => {
     <Layout>
       <Box>
         {serverSideError && (
-          <Text color="red.500" bg="red.200" fontWeight={600} p={4} m={4} borderRadius={10}>
+          <Text color="red.500" bg="red.200" p={4} m={4} borderRadius={10}>
             {serverSideError}
           </Text>
         )}

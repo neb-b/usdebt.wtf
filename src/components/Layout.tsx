@@ -37,7 +37,7 @@ const Layout: React.FC<Props> = ({ children }) => {
           py={[4]}
           sx={{ zIndex: 1, position: "relative", height: "80px" }}
         >
-          <Text fontSize={28} fontWeight={800} color="brand.orange">
+          <Text fontSize={28} fontWeight={900} color="brand.orange">
             wtf?
           </Text>
         </Flex>
@@ -60,6 +60,7 @@ const Layout: React.FC<Props> = ({ children }) => {
           alignItems={["flex-start", "center"]}
           mt="auto"
           width="100%"
+          fontWeight={400}
         >
           <Link color="brand.orange" href="https://github.com/neb-b/debtclock" mb={[2, 0]}>
             <Flex alignItems="center">
