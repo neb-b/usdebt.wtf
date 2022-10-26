@@ -4,14 +4,28 @@ import db from "core/db"
 const BTC_API_URL = "https://api.coinbase.com/v2/prices/spot?currency=USD"
 const MEMPOOL_SPACE_API_URL = "https://mempool.space/api/blocks/tip/height"
 
-export const getBtcData = async () => {
-  const res = await fetch(BTC_API_URL)
-  const { data: btcData } = await res.json()
+export type BtcData = {
+  price: number
+  blockHeight: number
+}
 
-  const blockRes = await fetch(MEMPOOL_SPACE_API_URL)
-  const blockHeight = await blockRes.json()
+export const getBtcData = async (): Promise<BtcData> => {
+  const promises = [fetch(BTC_API_URL), fetch(MEMPOOL_SPACE_API_URL)]
+  const [btcPriceDataRes, blockRes] = await Promise.all(promises)
+  const [{ data: btcPriceData }, blockHeight] = await Promise.all([
+    btcPriceDataRes.json(),
+    blockRes.json(),
+  ])
 
-  return { price: btcData.amount, blockHeight }
+  if (!btcPriceData.amount) {
+    throw Error("unable to get BTC price")
+  }
+
+  if (!blockHeight) {
+    throw Error("unable to get BTC block height")
+  }
+
+  return { price: Number(btcPriceData.amount), blockHeight }
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

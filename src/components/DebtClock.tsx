@@ -53,7 +53,7 @@ const TotalDebt = ({ amount, ...rest }) => {
 const DebtClock = ({ usd, btc }) => {
   const [debt, setDebt] = React.useState(usd.initialAmount)
   const [debtBtc, setDebtBtc] = React.useState(btc.initialAmount)
-  const [interest, setInterest] = React.useState(usd.interest)
+  const [interest, setInterest] = React.useState(usd.interestInitialAmount)
 
   const btcRateToMatchDebt = Number(debt / BTC_SUPPLY)
   let btcRateToMatchDebtString = `$${format(btcRateToMatchDebt)}`
@@ -63,6 +63,7 @@ const DebtClock = ({ usd, btc }) => {
   const usDebtPerTaxPayer = format(debt / US_TAXPAYER_POPULATION)
   const debtToGDP = format((debt / usd.currentGDP) * 100)
   const yearlyInterest = format(usd.interestYearlyAmount, 0)
+  const interestPaidForFiscalYear = format(interest, 0)
 
   React.useEffect(() => {
     let amountUsd = usd.initialAmount
@@ -97,20 +98,29 @@ const DebtClock = ({ usd, btc }) => {
         }}
       >
         <TotalDebt amount={debt} pb={12} />
-
         <RowItem
           label="Yearly interest on debt at current rate"
           value={`$${yearlyInterest}`}
           sub={
-            <Text fontSize={14} fontWeight={400}>
+            <Box>
               <Text color="brand.yellow" display="inline">
-                ${interest}
+                ${interestPaidForFiscalYear}
               </Text>{" "}
-              paid so far this year
-              <Text fontSize={12} mb="auto" ml={2} fontWeight={400} display="inline-block">
-                <Link href="#source-2">[2]</Link>
+              <Text display="inline-block" color="white">
+                paid so far this year
               </Text>
-            </Text>
+              <Link
+                href="#source-2"
+                fontSize={12}
+                mb="auto"
+                ml={2}
+                fontWeight={400}
+                display="inline-block"
+                color="white"
+              >
+                [2]
+              </Link>
+            </Box>
           }
         />
 

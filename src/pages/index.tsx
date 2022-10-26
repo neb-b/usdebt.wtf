@@ -25,6 +25,9 @@ type Props = {
     changePerMs: number
     debtPerPerson: number
     currentGDP: number
+    interestInitialAmount: number
+    interestChangePerMs: number
+    interestYearlyAmount: number
   }
   btc?: {
     price: number
@@ -64,7 +67,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   try {
-    const { usd, btc } = await getData()
+    const date = new Date()
+    const { usd, btc } = await getData(Date.now())
 
     return {
       props: {

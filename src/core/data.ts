@@ -1,5 +1,6 @@
 import db from "core/db"
 import { getBtcData } from "pages/api/bitcoin"
+import type { BtcData } from "pages/api/bitcoin"
 import type { DebtRecord } from "pages/index"
 import { US_POPULATION } from "./constants"
 import interestData from "./interest-payment-history.json"
@@ -10,7 +11,7 @@ const GDP = [
   { year: 2022, value: 24694112000000 }, // estimate
 ]
 
-const getValues = (records, btcPrice) => {
+const getValues = (records, btcData, date) => {
   if (!records) {
     return {}
   }
@@ -23,16 +24,18 @@ const getValues = (records, btcPrice) => {
   const differenceInMs = previousLatestRecordDate.getTime() - latestRecordDate.getTime()
   const changePerMsUsd = (previousLatestRecord.us_debt - latestRecord.us_debt) / differenceInMs
   const changePerMsBtc =
-    (previousLatestRecord.us_debt / btcPrice - latestRecord.us_debt / btcPrice) / differenceInMs
+    (previousLatestRecord.us_debt / btcData.price - latestRecord.us_debt / btcData.price) /
+    differenceInMs
 
-  const todaysDate = new Date()
+  const todaysDate = new Date(date)
   const msSinceLastReport = todaysDate.getTime() - new Date(latestRecord.date).getTime()
   const initialDebtAmountUSD = msSinceLastReport * changePerMsUsd + latestRecord.us_debt
   const usDebtPerPerson = initialDebtAmountUSD / US_POPULATION
-  const initialDebtAmountBTC = msSinceLastReport * changePerMsBtc + latestRecord.us_debt / btcPrice
+  const initialDebtAmountBTC =
+    msSinceLastReport * changePerMsBtc + latestRecord.us_debt / btcData.price
 
   // Debt to GDP
-  const now = new Date()
+  const now = new Date(date)
   const start = new Date(now.getFullYear(), 0, 0)
   const diff = now.valueOf() - start.valueOf()
   const oneDay = 1000 * 60 * 60 * 24
@@ -45,7 +48,7 @@ const getValues = (records, btcPrice) => {
   // Interest
   const latestInterestRecord = interestData[interestData.length - 1]
   const secondLatestInterestRecord = interestData[interestData.length - 2]
-  const firstDayOfFiscalYear = new Date(`${new Date().getFullYear()}-10-01`)
+  const firstDayOfFiscalYear = new Date(`${todaysDate.getFullYear()}-10-01`)
   const msSinceFirstDayOfFiscalYear = todaysDate.getTime() - firstDayOfFiscalYear.getTime()
   const msInYear = 1000 * 60 * 60 * 24 * 365
 
@@ -83,25 +86,33 @@ const getValues = (records, btcPrice) => {
   }
 }
 
-export const getData = async () => {
-  const { data, error } = await db
-    .from<DebtRecord>("money")
-    .select("date,us_debt")
-    .not("us_debt", "is", null)
-    .order("id", { ascending: false })
-    .limit(2)
+export const getData = async (date = Date.now()) => {
+  const getMoney = async () => {
+    const { data, error } = await db
+      .from<DebtRecord>("money")
+      .select("date,us_debt")
+      .not("us_debt", "is", null)
+      .order("id", { ascending: false })
+      .limit(2)
 
-  if (error) throw error
+    if (error) {
+      throw error
+    }
 
-  const { price, blockHeight } = await getBtcData()
-  const { usd, btc } = getValues(data, price)
+    return data
+  }
+
+  const promises = [getMoney(), getBtcData()]
+  const results = await Promise.all(promises)
+  const [moneyData, btcData] = results
+
+  const { usd, btc } = getValues(moneyData as DebtRecord[], btcData as BtcData, date)
 
   return {
     usd,
     btc: {
       ...btc,
-      price,
-      blockHeight,
+      ...btcData,
     },
   }
 }

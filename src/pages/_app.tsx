@@ -7,9 +7,6 @@ import { Analytics } from "@vercel/analytics/react"
 import theme from "theme"
 
 function App({ Component, pageProps }: AppProps) {
-  const [isMounted, setIsMounted] = React.useState(false)
-  React.useEffect(() => setIsMounted(true), [])
-
   const ogImage = `https://usdebt.wtf/api/og?reset=${Date.now()}`
 
   return (
@@ -25,7 +22,9 @@ function App({ Component, pageProps }: AppProps) {
         <meta name="twitter:image" content={ogImage} />
         <meta name="twitter:title" content="usdebt.wtf" />
       </Head>
-      <ChakraProvider theme={theme}>{isMounted && <Component {...pageProps} />}</ChakraProvider>
+      <ChakraProvider theme={theme}>
+        <Component {...pageProps} />
+      </ChakraProvider>
       <Analytics />
     </>
   )
