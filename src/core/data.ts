@@ -112,7 +112,7 @@ export const getData = async (date = Date.now()) => {
     usd,
     btc: {
       ...btc,
-      ...btcData,
+      ...(btcData as BtcData),
     },
   }
 }
