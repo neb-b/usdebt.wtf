@@ -102,8 +102,8 @@ const DebtClock = ({ usd, btc }) => {
           label="Yearly interest on debt at current rate"
           value={`$${yearlyInterest}`}
           sub={
-            <Box>
-              <Text color="brand.yellow" display="inline">
+            <Box fontSize={14}>
+              <Text color="brand.yellow" display="inline" fontWeight={600}>
                 ${interestPaidForFiscalYear}
               </Text>{" "}
               <Text display="inline-block" color="white">
