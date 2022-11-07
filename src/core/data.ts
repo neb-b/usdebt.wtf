@@ -2,7 +2,7 @@ import db from "core/db"
 import { getBtcData } from "pages/api/bitcoin"
 import type { BtcData } from "pages/api/bitcoin"
 import type { DebtRecord } from "pages/index"
-import { US_POPULATION } from "./constants"
+import { US_POPULATION, BTC_SUPPLY } from "./constants"
 import interestData from "./interest-payment-history.json"
 
 // https://www.cbo.gov/data/budget-economic-data

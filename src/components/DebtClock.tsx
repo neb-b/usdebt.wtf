@@ -59,6 +59,7 @@ const DebtClock = ({ usd, btc }) => {
   let btcRateToMatchDebtString = `$${format(btcRateToMatchDebt)}`
   const btcMarketCapPercentOfDebt = ((btc.price * BTC_SUPPLY) / debt) * 100
   const btcMarketCapPercentOfDebtString = `${format(btcMarketCapPercentOfDebt, 2)}%`
+  const btcToPayoffDebt = Number(debt / btc.price)
   const usDebtPerPerson = format(debt / US_POPULATION)
   const usDebtPerTaxPayer = format(debt / US_TAXPAYER_POPULATION)
   const debtToGDP = format((debt / usd.currentGDP) * 100)
@@ -130,6 +131,17 @@ const DebtClock = ({ usd, btc }) => {
         <RowItem
           label="Fully diluted Bitcoin marketcap as a percentage of total US debt"
           value={btcMarketCapPercentOfDebtString}
+        />
+        <RowItem
+          label="BTC needed to payoff US debt"
+          value={`${format(btcToPayoffDebt, 0)} BTC`}
+          sub={
+            <Box fontSize={14}>
+              <Text color="brand.yellow" display="inline" fontWeight={600}>
+                {format(btcToPayoffDebt / BTC_SUPPLY, 0)}% greater than total supply
+              </Text>
+            </Box>
+          }
         />
         <RowItem
           label="Price of BTC for market cap to surpass total debt"
