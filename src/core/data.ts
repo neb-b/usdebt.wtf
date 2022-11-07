@@ -51,6 +51,7 @@ const getValues = (records, btcData, date) => {
   const firstDayOfFiscalYear = new Date(`${todaysDate.getFullYear()}-10-01`)
   const msSinceFirstDayOfFiscalYear = todaysDate.getTime() - firstDayOfFiscalYear.getTime()
   const msInYear = 1000 * 60 * 60 * 24 * 365
+  const msLeftInYear = msInYear - msSinceFirstDayOfFiscalYear
 
   let initialInterestAmount: number
   let interestPaymentRateInMs: number
@@ -62,13 +63,23 @@ const getValues = (records, btcData, date) => {
       (latestInterestRecord.total - secondLatestInterestRecord.total) / 30.5 / 24 / 60 / 60 / 1000
     initialInterestAmount = msSinceFirstDayOfFiscalYear * interestPaymentRateInMs
     estimatedYearlyInterest = interestPaymentRateInMs * msInYear
+  } else if (latestInterestRecord.date.includes("-10-31")) {
+    const msInFirstRecordedMonth = 1000 * 60 * 60 * 24 * 31
+    interestPaymentRateInMs = latestInterestRecord.total / msInFirstRecordedMonth
+    initialInterestAmount = msSinceFirstDayOfFiscalYear * interestPaymentRateInMs
+    estimatedYearlyInterest = latestInterestRecord.total + interestPaymentRateInMs * msLeftInYear
   } else {
-    interestPaymentRateInMs = latestInterestRecord.total / msSinceFirstDayOfFiscalYear
+    const msBetweenLastTwoRecordedMonths =
+      // @ts-ignore
+      new Date(latestInterestRecord.date) - new Date(secondLatestInterestRecord.date)
+
+    interestPaymentRateInMs =
+      (latestInterestRecord.total + secondLatestInterestRecord.total) /
+      msBetweenLastTwoRecordedMonths
     initialInterestAmount =
       latestInterestRecord.total + msSinceFirstDayOfFiscalYear * interestPaymentRateInMs
 
     // Figure out yearly estimate by adding last reported amount + (currentRateInMs * msLeftInYear)
-    const msLeftInYear = msInYear - msSinceFirstDayOfFiscalYear
     estimatedYearlyInterest = latestInterestRecord.total + interestPaymentRateInMs * msLeftInYear
   }
 

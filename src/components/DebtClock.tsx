@@ -76,7 +76,7 @@ const DebtClock = ({ usd, btc }) => {
       amountInterest += usd.interestChangePerMs * 20
       setDebt(amountUsd)
       setDebtBtc(amountBtc)
-      setInterest(format(amountInterest))
+      setInterest(amountInterest)
     }, 20)
     return () => clearInterval(interval)
   }, [
@@ -127,7 +127,6 @@ const DebtClock = ({ usd, btc }) => {
         <RowItem label="Debt To GDP" value={`${debtToGDP}%`} />
         <RowItem label="Debt Per Person" value={`$${usDebtPerPerson}`} />
         <RowItem label="Debt Per Taxpayer" value={`$${usDebtPerTaxPayer}`} />
-        <RowItem label="Bitcoin Block Height" value={format(btc.blockHeight, 0)} />
         <RowItem
           label="Fully diluted Bitcoin marketcap as a percentage of total US debt"
           value={btcMarketCapPercentOfDebtString}
@@ -136,6 +135,8 @@ const DebtClock = ({ usd, btc }) => {
           label="Price of BTC for market cap to surpass total debt"
           value={btcRateToMatchDebtString}
         />
+        <RowItem label="Bitcoin Block Height" value={format(btc.blockHeight, 0)} />
+
         <Box mt={8} pr={6}>
           <SourceItem
             id={1}

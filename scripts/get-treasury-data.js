@@ -12,7 +12,7 @@ const start = async () => {
   try {
     let promises = []
 
-    for (let i = 1; i <= 56; i++) {
+    for (let i = 56; i <= 56; i++) {
       promises.push(
         new Promise((resolve) => setTimeout(resolve, delay)).then(() => axios.get(US_API_URL + i))
       )
