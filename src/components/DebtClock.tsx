@@ -138,7 +138,7 @@ const DebtClock = ({ usd, btc }) => {
           sub={
             <Box fontSize={14}>
               <Text color="brand.yellow" display="inline" fontWeight={600}>
-                {format(btcToPayoffDebt / BTC_SUPPLY, 0)}% greater than total supply
+                {format(btcToPayoffDebt / BTC_SUPPLY, 0)}x greater than total supply
               </Text>
             </Box>
           }
