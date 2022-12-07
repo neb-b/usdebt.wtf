@@ -74,10 +74,14 @@ const getValues = (records, btcData, date) => {
       new Date(latestInterestRecord.date) - new Date(secondLatestInterestRecord.date)
 
     interestPaymentRateInMs =
-      (latestInterestRecord.total + secondLatestInterestRecord.total) /
+      (latestInterestRecord.total - secondLatestInterestRecord.total) /
       msBetweenLastTwoRecordedMonths
+
+    const msSinceLastRecordedDate =
+      todaysDate.getTime() - new Date(latestInterestRecord.date).getTime()
+
     initialInterestAmount =
-      latestInterestRecord.total + msSinceFirstDayOfFiscalYear * interestPaymentRateInMs
+      latestInterestRecord.total + msSinceLastRecordedDate * interestPaymentRateInMs
 
     // Figure out yearly estimate by adding last reported amount + (currentRateInMs * msLeftInYear)
     estimatedYearlyInterest = latestInterestRecord.total + interestPaymentRateInMs * msLeftInYear
