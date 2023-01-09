@@ -16,14 +16,7 @@ const TotalDebt = ({ amount, ...rest }) => {
         </Text>
       </Box>
 
-      <Text
-        color="brand.orange"
-        fontSize={56}
-        fontWeight={900}
-        lineHeight={1}
-        letterSpacing="-.8px"
-        mt={3}
-      >
+      <Text color="brand.orange" fontSize={56} fontWeight={900} lineHeight={1} letterSpacing="-.8px" mt={3}>
         {toWords(Math.round(amount / 1000000) * 1000000).split("trillion")[0] + " trillion"} dollars
       </Text>
 
@@ -99,7 +92,7 @@ const DebtClock = ({ usd, btc }) => {
         }}
       >
         <TotalDebt amount={debt} pb={12} />
-        <RowItem
+        {/* <RowItem
           label="Yearly interest on debt at current rate"
           value={`$${yearlyInterest}`}
           sub={
@@ -123,7 +116,7 @@ const DebtClock = ({ usd, btc }) => {
               </Link>
             </Box>
           }
-        />
+        /> */}
 
         <RowItem label="Debt To GDP" value={`${debtToGDP}%`} />
         <RowItem label="Debt Per Person" value={`$${usDebtPerPerson}`} />
@@ -143,10 +136,7 @@ const DebtClock = ({ usd, btc }) => {
             </Box>
           }
         />
-        <RowItem
-          label="Price of BTC for market cap to surpass total debt"
-          value={btcRateToMatchDebtString}
-        />
+        <RowItem label="Price of BTC for market cap to surpass total debt" value={btcRateToMatchDebtString} />
         <RowItem label="Bitcoin Block Height" value={format(btc.blockHeight, 0)} />
 
         <Box mt={8} pr={6}>
@@ -154,10 +144,10 @@ const DebtClock = ({ usd, btc }) => {
             id={1}
             link="https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/debt-to-the-penny"
           />
-          <SourceItem
+          {/* <SourceItem
             id={2}
             link="https://fiscaldata.treasury.gov/datasets/interest-expense-debt-outstanding/interest-expense-on-the-public-debt-outstanding"
-          />
+          /> */}
         </Box>
       </Box>
     </Flex>
