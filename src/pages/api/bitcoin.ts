@@ -12,10 +12,7 @@ export type BtcData = {
 export const getBtcData = async (): Promise<BtcData> => {
   const promises = [fetch(BTC_API_URL), fetch(MEMPOOL_SPACE_API_URL)]
   const [btcPriceDataRes, blockRes] = await Promise.all(promises)
-  const [{ data: btcPriceData }, blockHeight] = await Promise.all([
-    btcPriceDataRes.json(),
-    blockRes.json(),
-  ])
+  const [{ data: btcPriceData }, blockHeight] = await Promise.all([btcPriceDataRes.json(), blockRes.json()])
 
   if (!btcPriceData.amount) {
     throw Error("unable to get BTC price")
@@ -39,11 +36,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const btcPrice = await getBtcData()
+    const { price } = await getBtcData()
     const date = new Date().toISOString().split("T")[0]
 
     const { error } = await db.from("money").insert({
-      btc_price: Number(btcPrice).toFixed(0),
+      btc_price: Number(price).toFixed(0),
       date,
     })
 

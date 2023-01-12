@@ -46,17 +46,13 @@ const tweet = async () => {
         const { usd } = await getData()
         const status = `$${format(usd.initialAmount, 0)}`
 
-        client.post(
-          "statuses/update",
-          { media_ids: media.media_id_string, status },
-          function (error) {
-            if (error) {
-              reject(error)
-            }
-
-            return resolve()
+        client.post("statuses/update", { media_ids: media.media_id_string, status }, function (error) {
+          if (error) {
+            reject(error)
           }
-        )
+
+          return resolve()
+        })
       })
     } catch (e) {
       console.log("error: ", JSON.stringify(e))
