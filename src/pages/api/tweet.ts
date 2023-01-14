@@ -34,25 +34,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 const tweet = async () => {
   return new Promise<void>(async (resolve, reject) => {
     try {
-      const { data } = await axios.get("https://usdebt.wtf/api/og", {
-        responseType: "arraybuffer",
-      })
+      // const { data } = await axios.get("https://usdebt.wtf/api/og", {
+      //   responseType: "arraybuffer",
+      // })
 
-      client.post("media/upload", { media: data }, async (error, media) => {
+      // client.post("media/upload", { media: data }, async (error, media) => {
+      //   if (error) {
+      //     throw error
+      //   }
+
+      //   const { usd } = await getData()
+      //   const status = `$${format(usd.initialAmount, 0)}`
+
+      //   client.post("statuses/update", { media_ids: media.media_id_string, status }, function (error) {
+      //     if (error) {
+      //       reject(error)
+      //     }
+
+      //     return resolve()
+      //   })
+      // })
+
+      const { usd } = await getData()
+      const status = `$${format(usd.initialAmount, 0)}`
+
+      client.post("statuses/update", { status }, function (error) {
         if (error) {
-          throw error
+          reject(error)
         }
 
-        const { usd } = await getData()
-        const status = `$${format(usd.initialAmount, 0)}`
-
-        client.post("statuses/update", { media_ids: media.media_id_string, status }, function (error) {
-          if (error) {
-            reject(error)
-          }
-
-          return resolve()
-        })
+        return resolve()
       })
     } catch (e) {
       console.log("error: ", JSON.stringify(e))
