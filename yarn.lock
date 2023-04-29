@@ -3665,6 +3665,13 @@
   "resolved" "https://registry.npmjs.org/path-type/-/path-type-4.0.0.tgz"
   "version" "4.0.0"
 
+"paymeformyapi@file:../paymeformyapi":
+  "resolved" "file:../paymeformyapi"
+  "version" "0.0.4"
+  dependencies:
+    "axios" "^1.4.0"
+    "uuid" "^9.0.0"
+
 "pend@~1.2.0":
   "integrity" "sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg=="
   "resolved" "https://registry.npmjs.org/pend/-/pend-1.2.0.tgz"
