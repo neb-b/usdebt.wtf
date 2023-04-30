@@ -23,7 +23,7 @@
     "next": "^12.3.0",
     "node-twitter": "^0.5.3",
     "number-to-words": "^1.2.4",
-    "paymeformyapi": "^0.0.5",
+    "paymeformyapi": "file:../paymeformyapi",
     "react": "^18.2.0",
     "react-charts": "^3.0.0-beta.48",
     "react-dom": "^18.2.0",
