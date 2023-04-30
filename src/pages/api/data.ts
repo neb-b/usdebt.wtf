@@ -18,6 +18,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { success, api_token, invoice } = await paywall.deductBalance(api_token_from_request as string)
 
     if (!success) {
+      if (!api_token_from_request) {
+        return res.redirect(`/api/data?api_token=${api_token}`)
+      }
+
       res.status(402).json({
         statusCode: 402,
         message:
