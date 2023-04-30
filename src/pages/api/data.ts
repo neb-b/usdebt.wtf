@@ -7,7 +7,7 @@ const paywall = new PayMeForMyAPI({
   lnBitsApiKey: process.env.LN_BITS_API_KEY,
   lnBitsURL: process.env.LN_BITS_URL,
   lnBitsAdminInvoiceKey: process.env.LN_BITS_ADMIN_INVOICE_KEY,
-  refillAmount: 1000, // number of satoshis to refill
+  refillAmount: 500, // number of satoshis to refill
   requestCost: 1, // number of satoshis per API call
 })
 
