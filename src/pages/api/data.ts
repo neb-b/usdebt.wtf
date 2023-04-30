@@ -24,8 +24,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       res.status(402).json({
         statusCode: 402,
-        message:
-          'Payment required. Pay the invoice then add the api_token to your request - ?api_token={YOUR_TOKEN}',
+        message: api_token
+          ? 'Payment required. Pay the invoice then add the api_token to your request - ?api_token={YOUR_TOKEN}'
+          : 'Invalid api_token, remove it from the url to generate a new one.',
         api_token,
         invoice,
       })
