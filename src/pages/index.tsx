@@ -1,13 +1,12 @@
-import React from "react"
+import React from 'react'
 
-import { Box, Text } from "@chakra-ui/react"
-import { GetServerSideProps } from "next"
+import { GetServerSideProps } from 'next'
 
-import db from "core/db"
+import db from 'core/db'
 
-import DebtClock from "components/DebtClock"
-import Layout from "components/Layout"
-import { getData } from "core/data"
+import DebtClock from 'components/DebtClock'
+import Layout from 'components/Layout'
+import { getData } from 'core/data'
 
 export type DebtRecord = {
   id: number
@@ -34,30 +33,25 @@ type Props = {
     initialAmount: number
     changePerMs: number
   }
+  chart: { date: string; us_debt: number; btc_debt: number }[]
 }
 
-const Home: React.FC<Props> = ({ error: serverSideError, usd, btc }) => {
+const Home: React.FC<Props> = ({ error: serverSideError, usd, btc, chart }) => {
   return (
     <Layout>
-      <Box>
-        {serverSideError && (
-          <Text color="red.500" bg="red.200" p={4} m={4} borderRadius={10}>
-            {serverSideError}
-          </Text>
-        )}
+      {serverSideError && <div className="bg-red-300 text-red-800 p-4 m-4 rounded">{serverSideError}</div>}
 
-        {usd && btc && <DebtClock usd={usd} btc={btc} />}
-      </Box>
+      {usd && btc && <DebtClock usd={usd} btc={btc} chart={chart} />}
     </Layout>
   )
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === 'production') {
     try {
-      const { referer = "" } = context.req.headers
+      const { referer = '' } = context.req.headers
       const { error } = await db
-        .from("access")
+        .from('access')
         .insert({ created_at: new Date().toISOString().toLocaleString(), referer })
 
       if (error) {
@@ -67,21 +61,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   try {
-    const date = new Date()
-    const { usd, btc } = await getData(Date.now())
+    const { usd, btc, chart } = await getData(Date.now())
 
     return {
       props: {
         usd,
         btc,
+        chart,
       },
     }
   } catch (err) {
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.NODE_ENV !== 'production') {
       console.log(err)
     }
 
-    let message = "Unknown Error"
+    let message = 'Unknown Error'
 
     if (err instanceof Error) {
       message = err.message

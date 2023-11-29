@@ -1,91 +1,48 @@
-import React from "react"
-
-import axios from "axios"
-import { useRouter } from "next/router"
-import { Box, Text, Flex, Link } from "@chakra-ui/react"
-
-import GithubLogo from "./GithubLogo"
+import React from 'react'
+import axios from 'axios'
+import GithubLogo from './GithubLogo'
 
 type Props = {
   children: React.ReactNode
 }
 
 const Layout: React.FC<Props> = ({ children }) => {
-  const { query } = useRouter()
   const [visitors, setVisitors] = React.useState<number | null>(null)
-  const isTweetScreenshot = !!query.screenshot
 
   React.useEffect(() => {
-    axios.get("/api/visitors").then((res) => {
+    axios.get('/api/visitors').then((res) => {
       setVisitors(res.data.visitors)
     })
   })
 
   return (
-    <Box
-      sx={{
-        bg: "brand.bg",
-        position: "relative",
-        minHeight: "100vh",
-        px: isTweetScreenshot ? 4 : 0,
-      }}
-    >
-      {!isTweetScreenshot && (
-        <Flex
-          alignItems="center"
-          px={[6]}
-          py={[4]}
-          sx={{ zIndex: 1, position: "relative", height: "80px" }}
-        >
-          <Text fontSize={28} fontWeight={900} color="brand.orange">
-            wtf?
-          </Text>
-        </Flex>
-      )}
-      <Box
-        sx={{
-          minHeight: "100vh" || `calc(100vh - 80px)`,
-          display: "flex",
-          flexDirection: "column",
-          pt: isTweetScreenshot ? 4 : 0,
-        }}
-      >
-        <Box sx={{ mx: "auto", maxWidth: "30rem", mt: isTweetScreenshot ? 0 : 6 }}>
-          <Box pb={20}>{children}</Box>
-        </Box>
+    <div className="relative text-white bg-zinc-900 px-6 py-6">
+      <div className="text-3xl font-extrabold text-orange-500">wtf?</div>
 
-        <Flex
-          p={4}
-          flexDirection={["column", "row"]}
-          alignItems={["flex-start", "center"]}
-          mt="auto"
-          width="100%"
-          fontWeight={400}
-        >
-          <Link color="brand.orange" href="https://github.com/neb-b/debtclock" mb={[2, 0]}>
-            <Flex alignItems="center">
+      <div className="flex flex-col max-w-3xl mx-auto">
+        <div className="mx-auto mt-6">{children}</div>
+
+        <div className="flex flex-col md:flex-row items-start md:items-center mt-auto w-full font-normal">
+          <a href="https://github.com/neb-b/debtclock" className="text-orange-500 mb-2 md:mb-0">
+            <div className="flex items-center">
               <GithubLogo />
-              <Text color="brand.orange" ml={2}>
-                Github
-              </Text>
-            </Flex>
-          </Link>
+              <span className="ml-2">Github</span>
+            </div>
+          </a>
 
-          <Flex ml={[0, 4]}>
-            <Text mr={1}>Inspired by</Text>
-            <Link color="brand.orange" href="https://usdebtclock.org">
+          <div className="ml-0 md:ml-4">
+            <span className="mr-1 inline-block">Inspired by</span>
+            <a href="https://usdebtclock.org" className="text-orange-500">
               usdebtclock.org
-            </Link>
-          </Flex>
+            </a>
+          </div>
 
           {visitors && (
-            <Text ml={[0, "auto"]} fontSize={12} mt={[4, 0]}>
-              {visitors.toLocaleString()} visitors
-            </Text>
+            <span className="ml-0 md:ml-auto text-xs mt-4 md:mt-0">{visitors.toLocaleString()} visitors</span>
           )}
-        </Flex>
-      </Box>
-    </Box>
+        </div>
+      </div>
+    </div>
   )
 }
 

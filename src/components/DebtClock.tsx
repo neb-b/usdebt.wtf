@@ -1,49 +1,9 @@
-import React from "react"
+import React from 'react'
+import { toWords } from 'number-to-words'
+import { format } from 'core/utils'
+import { BTC_SUPPLY, US_POPULATION, US_TAXPAYER_POPULATION } from 'core/constants'
 
-import { Box, Text, Flex, Link } from "@chakra-ui/react"
-import { toWords } from "number-to-words"
-import { format } from "core/utils"
-import { BTC_SUPPLY, US_POPULATION, US_TAXPAYER_POPULATION } from "core/constants"
-
-const TotalDebt = ({ amount, ...rest }) => {
-  const usDebtString = `$${Math.trunc(amount).toLocaleString()}`
-
-  return (
-    <Box position="relative" overflow="hidden" {...rest}>
-      <Box bg="brand.yellow" display="inline-block" px={2}>
-        <Text color="black" fontWeight={900} fontSize={18} position="relative" zIndex={3}>
-          Total US National Debt
-        </Text>
-      </Box>
-
-      <Text color="brand.orange" fontSize={56} fontWeight={900} lineHeight={1} letterSpacing="-.8px" mt={3}>
-        {toWords(Math.round(amount / 1000000) * 1000000).split("trillion")[0] + " trillion"} dollars
-      </Text>
-
-      <Box my={2} position="relative" w="100%" display="flex" alignItems="center">
-        <Text
-          sx={{
-            fontSize: 24,
-            whiteSpace: "normal",
-            display: "inline",
-            lineHeight: 1,
-            letterSpacing: "2px",
-            wordBreak: "break-word",
-            zIndex: 2,
-            position: "relative",
-          }}
-        >
-          {usDebtString}
-        </Text>
-        <Text fontSize={12} ml={2} fontWeight={400}>
-          <Link href="#source-1">[1]</Link>
-        </Text>
-      </Box>
-    </Box>
-  )
-}
-
-const DebtClock = ({ usd, btc }) => {
+const DebtClock = ({ usd, btc, chart }) => {
   const [debt, setDebt] = React.useState(usd.initialAmount)
   const [debtBtc, setDebtBtc] = React.useState(btc.initialAmount)
   const [interest, setInterest] = React.useState(usd.interestInitialAmount)
@@ -83,120 +43,89 @@ const DebtClock = ({ usd, btc }) => {
   ])
 
   return (
-    <Flex direction="column" alignItems="flex-start" position="relative">
-      <Box
-        sx={{
-          mx: [2],
-          p: [4],
-          maxWidth: [undefined, "460px"],
-        }}
-      >
-        <TotalDebt amount={debt} pb={12} />
-        {/* <RowItem
-          label="Yearly interest on debt at current rate"
-          value={`$${yearlyInterest}`}
-          sub={
-            <Box fontSize={14}>
-              <Text color="brand.yellow" display="inline" fontWeight={600}>
-                ${interestPaidForFiscalYear}
-              </Text>{" "}
-              <Text display="inline-block" color="white">
-                paid so far this year
-              </Text>
-              <Link
-                href="#source-2"
-                fontSize={12}
-                mb="auto"
-                ml={2}
-                fontWeight={400}
-                display="inline-block"
-                color="white"
-              >
-                [2]
-              </Link>
-            </Box>
-          }
-        /> */}
+    <div className="flex flex-col items-start relative">
+      <div className="">
+        <div className="relative">
+          <div className="bg-yellow-400 p-2 inline-block">
+            <div className="text-black font-[900] text-lg">Total US National Debt</div>
+          </div>
 
-        <RowItem label="Debt To GDP" value={`${debtToGDP}%`} />
-        <RowItem label="Debt Per Person" value={`$${usDebtPerPerson}`} />
-        <RowItem label="Debt Per Taxpayer" value={`$${usDebtPerTaxPayer}`} />
-        <RowItem
-          label="Fully diluted Bitcoin marketcap as a percentage of total US debt"
-          value={btcMarketCapPercentOfDebtString}
-        />
-        <RowItem
-          label="BTC needed to payoff US debt"
-          value={`${format(btcToPayoffDebt, 0)} BTC`}
-          sub={
-            <Box fontSize={14}>
-              <Text color="brand.yellow" display="inline" fontWeight={600}>
-                {format(btcToPayoffDebt / BTC_SUPPLY, 0)}x greater than total supply
-              </Text>
-            </Box>
-          }
-        />
-        <RowItem label="Price of BTC for market cap to surpass total debt" value={btcRateToMatchDebtString} />
-        <RowItem label="Bitcoin Block Height" value={format(btc.blockHeight, 0)} />
+          <h1 className="mt-6 text-6xl leading-[54px] font-extrabold">
+            {toWords(Math.round(debt / 1000000) * 1000000).split('trillion')[0] + ' trillion'} dollars
+          </h1>
 
-        <Box mt={8} pr={6}>
+          <div className="mt-4 flex items-center">
+            <div className="text-2xl text-white inline-block px-2 py-1 mr-2">{`$${Math.trunc(
+              debt
+            ).toLocaleString()}`}</div>
+
+            <a href="#source-1">[1]</a>
+          </div>
+        </div>
+
+        <div className="mt-10 space-y-8">
+          <RowItem label="Debt To GDP" value={`${debtToGDP}%`} />
+          <RowItem label="Debt Per Person" value={`$${usDebtPerPerson}`} />
+          <RowItem label="Debt Per Taxpayer" value={`$${usDebtPerTaxPayer}`} />
+          <RowItem
+            label="Fully diluted Bitcoin marketcap as a percentage of total US debt"
+            value={btcMarketCapPercentOfDebtString}
+          />
+          <RowItem
+            label="BTC needed to payoff US debt"
+            value={`${format(btcToPayoffDebt, 0)} BTC`}
+            sub={
+              <div className="text-base">
+                <span className="text-yellow-500 inline font-semibold">
+                  {format(btcToPayoffDebt / BTC_SUPPLY, 0)}x greater than total supply
+                </span>
+              </div>
+            }
+          />
+          <RowItem
+            label="Price of BTC for market cap to surpass total debt"
+            value={btcRateToMatchDebtString}
+          />
+          <RowItem label="Bitcoin Block Height" value={format(btc.blockHeight, 0)} />
+        </div>
+
+        <div className="mt-8 pr-6">
           <SourceItem
             id={1}
             link="https://fiscaldata.treasury.gov/datasets/debt-to-the-penny/debt-to-the-penny"
           />
           {/* <SourceItem
-            id={2}
-            link="https://fiscaldata.treasury.gov/datasets/interest-expense-debt-outstanding/interest-expense-on-the-public-debt-outstanding"
-          /> */}
-        </Box>
-      </Box>
-    </Flex>
+    id={2}
+    link="https://fiscaldata.treasury.gov/datasets/interest-expense-debt-outstanding/interest-expense-on-the-public-debt-outstanding"
+  /> */}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const RowItem = ({ label, value, sub }: { label: string; value: string; sub?: React.ReactNode }) => {
+  return (
+    <div className="">
+      <p className="font-normal max-w-[300px]">{label}</p>
+
+      <p className="font-extrabold text-4xl">{value}</p>
+
+      {sub}
+    </div>
+  )
+}
+
+const SourceItem = ({ link, id }: { link: string; id: number }) => {
+  return (
+    <div id={`source-${id}`} className="text-white font-normal text-sm flex mb-4">
+      <p className="mr-2">[{id}]</p>
+
+      <p className="text-orange-500 text-xs whitespace-pre-wrap">
+        <a href={link}>{link}</a>
+      </p>
+    </div>
   )
 }
 
 export default DebtClock
-
-type RowItemProps = {
-  label: string
-  value: string
-  sub?: React.ReactNode
-}
-
-const RowItem = ({ label, value, sub }: RowItemProps) => {
-  return (
-    <Box pb={8}>
-      <Text fontWeight={400} maxWidth={["300px"]}>
-        {label}
-      </Text>
-
-      <Text
-        sx={{
-          fontWeight: 900,
-          fontSize: 32,
-          fontFeatureSettings: '"tnum" 1',
-        }}
-      >
-        {value}
-      </Text>
-
-      {sub}
-    </Box>
-  )
-}
-
-type SourceItemProps = {
-  link: string
-  id: number
-}
-
-const SourceItem = ({ link, id }: SourceItemProps) => {
-  return (
-    <Box id={`source-${id}`} color="white" fontWeight={400} fontSize={12} display="flex" mb={4}>
-      <Text mr={2}>[{id}]</Text>
-
-      <Text color="brand.orange">
-        <Link href={link}>{link}</Link>
-      </Text>
-    </Box>
-  )
-}

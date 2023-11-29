@@ -1,16 +1,17 @@
-import React from "react"
-import { ChakraProvider } from "@chakra-ui/react"
-import { AppProps } from "next/app"
-import Head from "next/head"
-import { Analytics } from "@vercel/analytics/react"
+import React from 'react'
+import { AppProps } from 'next/app'
+import Head from 'next/head'
+import { Analytics } from '@vercel/analytics/react'
+import 'theme/global.css'
+import { Chivo } from '@next/font/google'
 
-import theme from "theme"
+const chivo = Chivo({ subsets: ['latin'] })
 
 function App({ Component, pageProps }: AppProps) {
   const ogImage = `https://usdebt.wtf/api/og?reset=${Date.now()}`
 
   return (
-    <>
+    <main className={chivo.className}>
       <Head>
         <title>usdebt.wtf</title>
         <meta name="og:title" content="usdebt.wtf" />
@@ -22,11 +23,9 @@ function App({ Component, pageProps }: AppProps) {
         <meta name="twitter:image" content={ogImage} />
         <meta name="twitter:title" content="usdebt.wtf" />
       </Head>
-      <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
-      </ChakraProvider>
+      <Component {...pageProps} />
       <Analytics />
-    </>
+    </main>
   )
 }
 
