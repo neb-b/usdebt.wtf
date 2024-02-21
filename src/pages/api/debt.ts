@@ -6,7 +6,7 @@ import type { DebtRecord } from 'pages/index'
 
 const US_DEBT_API_URL =
   'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny?page[number]='
-const PAGE = 77
+const PAGE = 78
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {
