@@ -1,5 +1,15 @@
 {
   "github": {
     "silent": true
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/debt",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/bitcoin",
+      "schedule": "0 0 * * *"
+    }
+  ]
 }

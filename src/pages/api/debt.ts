@@ -6,18 +6,9 @@ import type { DebtRecord } from 'pages/index'
 
 const US_DEBT_API_URL =
   'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny?page[number]='
-const PAGE = 78
+const PAGE = 79
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const {
-    query: { auth },
-  } = req
-
-  if (process.env.NODE_ENV === 'production' && auth !== process.env.PING_AUTH) {
-    res.status(401).json({ error: 'unauthorized' })
-    return
-  }
-
   try {
     const { data: dbData, error } = await db
       .from<DebtRecord>('money')
@@ -29,8 +20,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       throw error
     }
 
-    const { data: apiData } = await axios.get(`${US_DEBT_API_URL}${PAGE}`)
-    const records = apiData.data
+    let apiData
+    let records
+    let latestPageNumber = PAGE
+
+    while (true) {
+      const response = await axios.get(`${US_DEBT_API_URL}${latestPageNumber}`)
+      apiData = response.data
+      records = apiData.data
+
+      if (apiData.meta['total-pages'] === latestPageNumber) {
+        break
+      } else {
+        latestPageNumber = apiData.meta['total-pages']
+      }
+    }
 
     let itemsToUpdate = []
     records.forEach((record) => {
@@ -51,7 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { error: updateError } = await db.from('money').upsert(itemsToUpdate)
 
     if (updateError) {
-      throw error
+      throw updateError
     }
 
     res.status(200).json({ status: 'ok' })
