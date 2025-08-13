@@ -9,7 +9,17 @@ const US_DEBT_API_URL =
 const PAGE = 82
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const authHeader = req.headers.authorization
+
   try {
+    if (
+      process.env.NODE_ENV !== "development" &&
+      authHeader !== `Bearer ${process.env.CRON_SECRET}`
+    ) {
+      res.status(401).json({ message: 'Unauthorized' })
+      return
+    }
+
     const { data: dbData, error } = await db
       .from<DebtRecord>('money')
       .select('*')
@@ -35,6 +45,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         latestPageNumber = apiData.meta['total-pages']
       }
     }
+
+    console.log('records', records)
 
     let itemsToUpdate = []
     records.forEach((record) => {

@@ -26,12 +26,13 @@ export const getBtcData = async (): Promise<BtcData> => {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const {
-    query: { auth },
-  } = req
-
-  if (process.env.NODE_ENV === 'production' && auth !== process.env.PING_AUTH) {
-    res.status(401).json({ error: 'unauthorized' })
+  const authHeader = req.headers.authorization
+  
+  if (
+      process.env.NODE_ENV !== "development" &&
+      authHeader !== `Bearer ${process.env.CRON_SECRET}`
+    ) {
+    res.status(401).json({ message: 'Unauthorized' })
     return
   }
 
